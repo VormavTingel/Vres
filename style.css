@@ -143,7 +143,87 @@ section {
     backdrop-filter: blur(15px);
 }
 
+/* VRES ROW */
+.vres_row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 1rem;
+}
+  
+  .coluna {
+    flex: 1 0 0;
+    max-width: 6.66%; /* 100 / 15 = 6.66 */
+  }
+  
+  .coluna-2 {
+    flex: 1 0 0;
+    max-width: 13.33%; /* 6.66 * 2 = 13.33 */
+  }
+  
+  .coluna-3 {
+    flex: 1 0 0;
+    max-width: 20%; /* 6.66 * 3 = 20 */
+  }
 
+  .coluna-4 {
+    flex: 1 0 0;
+    max-width: 26.66%; /* 6.66 * 4 = 26.66 */
+  }
+
+  .coluna-5 {
+    flex: 1 0 0;
+    max-width: 33.33%; /* 6.66 * 5 = 33.33 */
+  }
+
+  .coluna-6 {
+    flex: 1 0 0;
+    max-width: 40%; /* 6.66 * 6 = 40 */
+  }
+
+  .coluna-7 {
+    flex: 1 0 0;
+    max-width: 46.66%; /* 6.66 * 7 = 46.66 */
+  }
+
+  .coluna-8 {
+    flex: 1 0 0;
+    max-width: 53.33%; /* 6.66 * 8 = 53.33 */
+  }
+
+  .coluna-9 {
+    flex: 1 0 0;
+    max-width: 60%; /* 6.66 * 9 = 60 */
+  }
+
+  .coluna-10 {
+    flex: 1 0 0;
+    max-width: 66.66%; /* 6.66 * 10 = 66.66 */
+  } 
+
+  .coluna-11 {
+    flex: 1 0 0;
+    max-width: 73.33%; /* 6.66 * 11 = 73.33 */
+  } 
+
+  .coluna-12 {
+    flex: 1 0 0;
+    max-width: 80%; /* 6.66 * 12 = 80 */
+  } 
+
+  .coluna-13 {
+    flex: 1 0 0;
+    max-width: 86.66%; /* 6.66 * 13 = 86.66 */
+  } 
+
+  .coluna-14 {
+    flex: 1 0 0;
+    max-width: 93.33%; /* 6.66 * 14 = 93.33 */
+  } 
+
+  .coluna-15 {
+    flex: 1 0 0;
+    max-width: 100%; /* 6.66 * 15 = 100 */
+  } 
 
 /* responsive */
 
@@ -164,6 +244,11 @@ section {
         font-size: 2rem;
         backdrop-filter: blur(15px);
     }
+    .vres_row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-gap: 1rem;
+    }
 }
 
 @media (max-width: 576px){
@@ -174,5 +259,15 @@ section {
     #hero h1{
         font-size: 2rem;
         backdrop-filter: blur(15px);
+    }
+    .coluna-3 {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .vres_row {
+        display: flex;
+        flex-direction: column;
     }
 }
