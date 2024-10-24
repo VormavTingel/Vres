@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <title>Vres</title>
+</head>
+<body style="background-image: url('Design.png');">
+    <header>
+        <div class="navbar">
+            <div class="logo"><a href="index.html">V.RES Project</a></div>
+            <ul class="links">
+            </ul>
+            <a href="sobre.html" class="action_btn">Sobre o Projeto</a>
+            <a href="login.html" class="action_btn">Login</a>
+            <a href="cadastro.html" class="action_btn">Cadastre-se</a>
+            <div class="toggle_btn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+
+        <div class="dropdown_menu">
+                <a href="sobre.html" class="action_btn">Sobre o Projeto</a>
+                <br><br><br>
+                <a href="login.html" class="action_btn">Login</a>
+                <br><br><br>
+                <a href="cadastro.html" class="action_btn">Cadastre-se</a>
+        </div>
+
+        <main>
+            <section id="hero">
+                <h1>Virtual Reality Environment Systems</h1>
+                <p>Virtual Reality Systems for meeting and education.</p>
+            </section>
+        </main>
+    </header>
+
+    <script>
+        const toggleBtn = document.querySelector('.toggle_btn');
+        const toggleBtnIcon = document.querySelector('.toggle_btn i');
+        const dropDownMenu = document.querySelector('.dropdown_menu');
+
+        toggleBtn.onclick = function () {
+            dropDownMenu.classList.toggle('open')
+            const isOpen = dropDownMenu.classList.contains('open')
+
+            toggleBtnIcon.classList = isOpen 
+            ? 'fa-solid fa-xmark' 
+            : 'fa-solid fa-bars';
+        }
+    </script>
+</body>
+</html>

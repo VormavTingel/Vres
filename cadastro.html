@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>V.RES - Cadastro de Usuário</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #7cacf4;
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e6f2ff;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 3px;
+            background-color: #4c8caf;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #4945a0;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Cadastro de Usuário</h2>
+        <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu email">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha">
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirme a Senha</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua senha">
+        </div>
+        <div class="form-group">
+            <button id="registerButton" type="submit">Cadastrar</button>
+        </div>
+        <div class="form-group login-link">
+            <a href="login.html">Já tem uma conta? Faça login</a>
+        </div>
+        <p id="registerMessage"></p> <!-- Área de mensagem -->
+    </div>
+
+    <script>
+        document.getElementById('registerButton').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission
+    
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const registerMessage = document.getElementById('registerMessage');
+    
+            // Verificação básica das senhas
+            if (password !== confirmPassword) {
+                registerMessage.style.color = 'red';
+                registerMessage.textContent = 'As senhas não coincidem!';
+                return;
+            }
+    
+            // Fazer uma requisição ao backend para registrar o usuário
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, email: email, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Cadastro realizado com sucesso') {
+                    registerMessage.style.color = 'green';
+                    registerMessage.textContent = 'Cadastro realizado com sucesso! Redirecionando para o login...';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000); // Redireciona após 2 segundos
+                } else {
+                    registerMessage.style.color = 'red';
+                    registerMessage.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                registerMessage.style.color = 'red';
+                registerMessage.textContent = 'Ocorreu um erro. Tente novamente mais tarde.';
+            });
+        });
+    </script>
+    
+</body>
+
+</html>

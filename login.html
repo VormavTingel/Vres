@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>V.RES - Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #7cacf4;
+            animation: fadeInAnimation ease 2s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0.0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e6f2ff;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 3px;
+            background-color: #4c8caf;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #4945a0;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="fulllogo_transparent.png" alt="VRES Logo" style="width: 400px; height: auto;">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário">
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha">
+        </div>
+        <div class="form-group">
+            <button id="loginButton" type="submit">Login</button>
+        </div>
+        <div class="form-group register-link">
+            <a href="register.html">Cadastre-se aqui</a>
+        </div>
+        <p id="loginMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission
+    
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const loginMessage = document.getElementById('loginMessage');
+    
+            // Fazer uma requisição ao backend para login
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Login bem-sucedido') {
+                    loginMessage.style.color = 'green';
+                    loginMessage.textContent = 'Login bem-sucedido! Redirecionando...';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000); // Redireciona após 2 segundos
+                } else {
+                    loginMessage.style.color = 'red';
+                    loginMessage.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                loginMessage.style.color = 'red';
+                loginMessage.textContent = 'Erro no login. Tente novamente mais tarde.';
+            });
+        });
+    </script>
+    
+</body>
+
+</html>
