@@ -93,7 +93,7 @@
 
     <script>
         document.getElementById('loginButton').addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); 
     
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
@@ -114,7 +114,7 @@
                     loginMessage.textContent = 'Login bem-sucedido! Redirecionando...';
                     setTimeout(() => {
                         window.location.href = 'index.html';
-                    }, 2000); // Redireciona após 2 segundos
+                    }, 2000); 
                 } else {
                     loginMessage.style.color = 'red';
                     loginMessage.textContent = data.message;

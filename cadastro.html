@@ -83,12 +83,12 @@
         <div class="form-group login-link">
             <a href="login.html">Já tem uma conta? Faça login</a>
         </div>
-        <p id="registerMessage"></p> <!-- Área de mensagem -->
+        <p id="registerMessage"></p> 
     </div>
 
     <script>
         document.getElementById('registerButton').addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); 
     
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
@@ -118,7 +118,7 @@
                     registerMessage.textContent = 'Cadastro realizado com sucesso! Redirecionando para o login...';
                     setTimeout(() => {
                         window.location.href = 'login.html';
-                    }, 2000); // Redireciona após 2 segundos
+                    }, 2000);
                 } else {
                     registerMessage.style.color = 'red';
                     registerMessage.textContent = data.message;

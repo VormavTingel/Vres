@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); // Importação do bcrypt para criptografar senhas
+const bcrypt = require('bcrypt'); 
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,8 +12,8 @@ app.use(cors());
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',          // Seu usuário MySQL (geralmente 'root')
-    password: 'Cl#101387',          // Sua senha MySQL
-    database: 'vreslogin'  // Nome do banco de dados que você criou
+    password: 'Cl#101387', // senha MySQL
+    database: 'vreslogin'  // Nome do banco de dados
 });
 
 db.connect((err) => {
