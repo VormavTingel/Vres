@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VR Sala de Matemática</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene>
+    <!-- Configuração da câmera em primeira pessoa -->
+    <a-camera id="player" position="0 1.6 0" wasd-controls="enabled: true" look-controls></a-camera>
+
+    <!-- Configuração da sala -->
+    <a-box position="0 0 -5" rotation="0 0 0" width="10" height="10" depth="0.1" color="#808080"></a-box>
+    <a-box position="0 0 5" rotation="0 180 0" width="10" height="10" depth="0.1" color="#808080"></a-box>
+    <a-box position="5 0 0" rotation="0 -90 0" width="10" height="10" depth="0.1" color="#808080"></a-box>
+    <a-box position="-5 0 0" rotation="0 90 0" width="10" height="10" depth="0.1" color="#808080"></a-box>
+    <a-plane position="0 -5 0" rotation="-90 0 0" width="10" height="10" color="#ffffff"></a-plane>
+
+    <!-- NPC (esfera representando um personagem) -->
+    <a-gltf-model id="npc" src="bobby.glb" position="1 -5 -4" scale="5 5 5" rotation="0 -90 0"></a-gltf-model>
+
+
+    <!-- Texto de pergunta e resposta -->
+    <a-text id="dialogue" value="" position="0 2 -3" color="#000000" visible="false"></a-text>
+    <a-text id="response" value="" position="0 1.5 -3" color="#00FF00" visible="false"></a-text>
+
+    <script>
+      // Função de detecção de proximidade
+      document.querySelector('a-scene').addEventListener('loaded', function () {
+        const player = document.querySelector('#player');
+        const npc = document.querySelector('#npc');
+        const dialogueText = document.querySelector('#dialogue');
+        const responseText = document.querySelector('#response');
+
+        let questionAsked = false;
+
+        // Função para verificar a distância entre o player e o NPC
+        function checkProximity() {
+          const playerPos = player.object3D.position;
+          const npcPos = npc.object3D.position;
+          const distance = playerPos.distanceTo(npcPos);
+
+          // Se o jogador estiver perto do NPC e a pergunta não foi feita ainda
+          if (distance < 1.5 && !questionAsked) {
+            questionAsked = true;
+            askQuestion();
+          }
+        }
+
+        // Função para fazer a pergunta
+        function askQuestion() {
+          dialogueText.setAttribute('value', 'Qual é o resultado de 5 + 3?');
+          dialogueText.setAttribute('visible', 'true');
+          
+          // Espera 5 segundos para simular uma resposta do jogador
+          setTimeout(() => {
+            giveAnswer(8); // Simulando que o jogador respondeu "8"
+          }, 5000);
+        }
+
+        // Função para verificar a resposta
+        function giveAnswer(playerAnswer) {
+          dialogueText.setAttribute('visible', 'false');
+          responseText.setAttribute('visible', 'true');
+
+          if (playerAnswer === 8) {
+            responseText.setAttribute('value', 'Correto! 5 + 3 = 8');
+          } else {
+            responseText.setAttribute('value', 'Incorreto. Tente novamente.');
+          }
+
+          // Esconde a resposta após alguns segundos
+          setTimeout(() => {
+            responseText.setAttribute('visible', 'false');
+            questionAsked = false;
+          }, 3000);
+        }
+
+        // Atualiza a verificação de proximidade a cada quadro
+        setInterval(checkProximity, 1000);
+      });
+    </script>
+  </a-scene>
+</body>
+</html>

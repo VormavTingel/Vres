@@ -143,6 +143,12 @@ section {
     backdrop-filter: blur(15px);
 }
 
+.displayed {
+    display: block;
+    position: absolute;
+    z-index: 10;
+}
+
 
 
 /* responsive */
