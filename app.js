@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
+const { exec } = require('child_process'); // Módulo para executar o Unreal
 
 const app = express();
 app.use(bodyParser.json());
@@ -84,6 +85,15 @@ app.post('/login', (req, res) => {
             if (!isPasswordValid) {
                 return res.status(401).json({ message: 'Senha incorreta' });
             }
+
+            // Login bem-sucedido: iniciar o executável do Unreal
+            exec('C:\\Users\\HS\\Desktop\\VresProjectV1\\VresProjectV1.exe', (err) => {
+                if (err) {
+                    console.error("Erro ao iniciar o Unreal:", err);
+                    return res.status(500).json({ message: 'Erro ao iniciar o Unreal' });
+                }
+                console.log("Unreal Engine iniciado.");
+            });
 
             res.status(200).json({ message: 'Login bem-sucedido' });
         } catch (error) {
