@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>DER WebApp</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Estilo geral e redefinições */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        h3 {
+            color: #333;
+            font-weight: 600;
+        }
+
+        #form-container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #diagram {
+            border: 1px solid #ccc;
+            margin: 20px;
+            overflow: hidden;
+            border-radius: 12px;
+            background-color: #ffffff;
+        }
+
+        /* Botões modernos */
+        button {
+            padding: 10px 20px;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.2);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilo dos campos de entrada */
+        input[type="text"], select {
+            padding: 10px;
+            margin-top: 8px;
+            width: calc(100% - 24px);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Estilo de responsividade para dispositivos móveis */
+        @media (max-width: 600px) {
+            #form-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            input, select, button {
+                font-size: 14px;
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="form-container">
+        <h3>Adicionar Entidades e Relacionamentos</h3>
+        <label>Nome da Entidade:</label>
+        <input type="text" id="entityName" placeholder="Nome da entidade">
+        <br><br>
+        <label>Atributos da Entidade (separados por vírgula):</label>
+        <input type="text" id="entityAttributes" placeholder="Ex.: id, nome, idade">
+        <button onclick="addEntity()">Adicionar Entidade</button>
+        <br><br>
+        
+        <label>Relacionamento:</label>
+        <input type="text" id="relationshipName" placeholder="Nome do relacionamento">
+        <br><br>
+        <label>De:</label>
+        <select id="sourceEntity"></select>
+        <br><br>
+        <label>Para:</label>
+        <select id="targetEntity"></select>
+        <br><br>
+        <label>Cardinalidade:</label>
+        <input type="text" id="cardinality" placeholder="Ex.: 1:N">
+        <button onclick="addRelationship()">Adicionar Relacionamento</button>
+        <br><br>
+        
+        <button onclick="clearDiagram()">Remover Tudo</button>
+        <button onclick="exportDiagram()">Exportar Diagrama</button>
+    </div>
+
+    <div id="diagram"></div>
+
+    <script>
+        const data = {
+            entities: [],
+            relationships: []
+        };
+
+        const width = 1000, height = 600;
+        let zoomLevel = 1;
+
+        const svg = d3.select("#diagram")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .call(d3.zoom().scaleExtent([0.5, 2]).on("zoom", function (event) {
+                svg.attr("transform", event.transform);
+            }))
+            .append("g");
+
+        function updateEntityDropdowns() {
+            const sourceSelect = document.getElementById("sourceEntity");
+            const targetSelect = document.getElementById("targetEntity");
+            sourceSelect.innerHTML = "";
+            targetSelect.innerHTML = "";
+
+            data.entities.forEach(entity => {
+                const option1 = document.createElement("option");
+                option1.value = entity.name;
+                option1.text = entity.name;
+                sourceSelect.appendChild(option1);
+
+                const option2 = document.createElement("option");
+                option2.value = entity.name;
+                option2.text = entity.name;
+                targetSelect.appendChild(option2);
+            });
+        }
+
+        function addEntity() {
+            const entityName = document.getElementById("entityName").value;
+            const entityAttributes = document.getElementById("entityAttributes").value.split(',').map(attr => attr.trim());
+            if (entityName && !data.entities.some(e => e.name === entityName)) {
+                data.entities.push({
+                    name: entityName,
+                    attributes: entityAttributes,
+                    x: 150 + data.entities.length * 300,
+                    y: 150
+                });
+                document.getElementById("entityName").value = "";
+                document.getElementById("entityAttributes").value = "";
+                updateDiagram();
+                updateEntityDropdowns();
+            }
+        }
+
+        function addRelationship() {
+            const relationshipName = document.getElementById("relationshipName").value;
+            const sourceEntity = document.getElementById("sourceEntity").value;
+            const targetEntity = document.getElementById("targetEntity").value;
+            const cardinality = document.getElementById("cardinality").value;
+
+            if (relationshipName && sourceEntity && targetEntity && cardinality) {
+                data.relationships.push({
+                    name: relationshipName,
+                    source: sourceEntity,
+                    target: targetEntity,
+                    cardinality: cardinality
+                });
+                document.getElementById("relationshipName").value = "";
+                document.getElementById("cardinality").value = "";
+                updateDiagram();
+            }
+        }
+
+        function clearDiagram() {
+            data.entities = [];
+            data.relationships = [];
+            updateDiagram();
+            updateEntityDropdowns();
+        }
+
+        function exportDiagram() {
+            const serializer = new XMLSerializer();
+            const source = serializer.serializeToString(document.querySelector("svg"));
+            const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "diagram.svg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function updateDiagram() {
+            svg.selectAll("*").remove();
+
+            data.entities.forEach(entity => {
+                const group = svg.append("g")
+                    .attr("transform", `translate(${entity.x},${entity.y})`)
+                    .call(d3.drag().on("drag", function (event) {
+                        entity.x = event.x;
+                        entity.y = event.y;
+                        updateDiagram();
+                    }));
+
+                group.append("rect")
+                    .attr("width", 120)
+                    .attr("height", 50 + entity.attributes.length * 20)
+                    .attr("fill", "lightblue")
+                    .attr("stroke", "black");
+
+                group.append("text")
+                    .attr("x", 60)
+                    .attr("y", 20)
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "middle")
+                    .style("font-weight", "bold")
+                    .text(entity.name);
+
+                entity.attributes.forEach((attr, index) => {
+                    group.append("text")
+                        .attr("x", 60)
+                        .attr("y", 40 + index * 20)
+                        .attr("text-anchor", "middle")
+                        .attr("alignment-baseline", "middle")
+                        .style("font-size", "12px")
+                        .text(attr);
+                });
+            });
+
+            data.relationships.forEach(relationship => {
+                const source = data.entities.find(e => e.name === relationship.source);
+                const target = data.entities.find(e => e.name === relationship.target);
+
+                const middleX = (source.x + target.x + 120) / 2;
+                const middleY = (source.y + target.y) / 2;
+
+                svg.append("polygon")
+                    .attr("points", `${middleX - 65},${middleY} ${middleX},${middleY - 20} ${middleX + 65},${middleY} ${middleX},${middleY + 20}`)
+                    .attr("fill", "lightgrey")
+                    .attr("stroke", "black");
+
+                svg.append("text")
+                    .attr("x", middleX)
+                    .attr("y", middleY)
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "middle")
+                    .style("font-size", "12px")
+                    .text(relationship.name);
+
+                const offset = 20;
+                svg.append("line")
+                    .attr("x1", source.x + 120 + offset)
+                    .attr("y1", source.y + 25)
+                    .attr("x2", target.x - offset)
+                    .attr("y2", target.y + 25)
+                    .attr("stroke", "black");
+
+                svg.append("polygon")
+                    .attr("points", "0,0 10,5 0,10")
+                    .attr("fill", "black")
+                    .attr("transform", `translate(${target.x - 10 - offset},${target.y + 20})`);
+
+                svg.append("text")
+                    .attr("x", (source.x + target.x) / 2 + 10)
+                    .attr("y", (source.y + target.y) / 2 - 15)
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "middle")
+                    .style("font-size", "12px")
+                    .text(relationship.cardinality);
+            });
+        }
+
+        updateDiagram();
+    </script>
+</body>
+</html>
