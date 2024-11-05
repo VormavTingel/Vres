@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+        input, select { padding: 10px; width: 300px; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+        img { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <input type="text" id="data" placeholder="Enter your link or text here" />
+    <select id="fileFormat">
+        <option value="png">PNG</option>
+        <option value="jpg">JPG</option>
+    </select>
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <div id="qrcode"></div>
+    <a id="downloadLink" style="display: none;" download="qrcode">Download QR Code</a>
+
+    <script>
+        async function generateQRCode() {
+            const data = document.getElementById("data").value;
+            const fileFormat = document.getElementById("fileFormat").value;
+            if (!data) {
+                alert("Please enter some data to generate a QR code.");
+                return;
+            }
+
+            // URL da API de terceiros para geração do QR Code
+            const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(data)}&format=${fileFormat}&size=200x200`;
+
+            // Exibir o QR Code
+            document.getElementById("qrcode").innerHTML = `<img src="${apiUrl}" alt="QR Code" />`;
+
+            // Configurar o link de download
+            const downloadLink = document.getElementById("downloadLink");
+            downloadLink.href = apiUrl;
+            downloadLink.download = `qrcode.${fileFormat}`;
+            downloadLink.style.display = "inline";
+            downloadLink.textContent = "Download QR Code";
+        }
+    </script>
+</body>
+</html>

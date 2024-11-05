@@ -1,0 +1,8 @@
+#dependencias do node
+node_modules/
+
+#arquivos env
+dados.env
+
+
+
