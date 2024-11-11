@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const { exec } = require('child_process'); // Módulo para executar o Unreal
+const { exec } = require('child_process');
 
 const app = express();
 app.use(bodyParser.json());
